@@ -148,21 +148,8 @@ function validateForm() {
   }
 
   if (firstInvalidInput && userTriedSubmit) firstInvalidInput.focus();
-  submitButton.disabled = !formIsValid;
   return formIsValid;
 }
-
-// Eventos de input para revalidar dinamicamente
-inputs.forEach(input => {
-  input.addEventListener('input', () => {
-    if (userTriedSubmit) validateForm();
-  });
-});
-genderRadios.forEach(radio => {
-  radio.addEventListener('change', () => {
-    if (userTriedSubmit) validateForm();
-  });
-});
 
 // Mostrar/ocultar senha
 const passwordIcons = document.querySelectorAll(".password-icon");
@@ -181,6 +168,27 @@ passwordIcons.forEach(icon => {
   });
 });
 
+// Mostrar instruções da senha ao começar a digitar
+const passwordInput = document.getElementById("password");
+const passwordInstructions = document.getElementById("password-instructions");
+if (passwordInstructions) {
+  passwordInput.addEventListener("input", () => {
+    passwordInstructions.style.display = "block";
+  });
+}
+
+// Eventos de input para revalidar dinamicamente
+inputs.forEach(input => {
+  input.addEventListener('input', () => {
+    if (userTriedSubmit) validateForm();
+  });
+});
+genderRadios.forEach(radio => {
+  radio.addEventListener('change', () => {
+    if (userTriedSubmit) validateForm();
+  });
+});
+
 // Evento de envio
 form.addEventListener("submit", e => {
   e.preventDefault();
@@ -189,13 +197,11 @@ form.addEventListener("submit", e => {
   if (isValid) {
     alert("Conta criada com sucesso!");
     form.reset();
-    submitButton.disabled = true;
     userTriedSubmit = false;
-    document.querySelectorAll('.valid').forEach(el => el.classList.remove('valid'));
+    document.querySelectorAll('.valid, .invalid').forEach(el => el.classList.remove('valid', 'invalid'));
+    document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+    if (passwordInstructions) passwordInstructions.style.display = "none";
   } else {
     alert("Por favor, corrija os erros antes de enviar.");
   }
 });
-
-// Validação inicial ao carregar
-window.addEventListener("load", validateForm);
