@@ -46,7 +46,6 @@ function isValidEmail(email) {
 
 function isValidPassword(password) {
   if (!password) return "Campo obrigatório";
-  // Pelo menos 8 chars, 1 letra minúscula, 1 maiúscula, 1 número, 1 especial
   const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
   if (!regex.test(password)) return "Senha deve ter 8+ chars, letras maiúsculas/minúsculas, números e símbolos";
   return "";
@@ -171,10 +170,15 @@ passwordIcons.forEach(icon => {
   });
 });
 
-// Prevenir envio se inválido
+// Prevenir envio se inválido ou confirmar sucesso
 form.addEventListener("submit", e => {
-  if (!validateForm()) {
-    e.preventDefault();
+  e.preventDefault();
+  if (validateForm()) {
+    alert("Conta criada com sucesso!");
+    form.reset();
+    submitButton.disabled = true;
+    document.querySelectorAll('.valid').forEach(el => el.classList.remove('valid'));
+  } else {
     alert("Por favor, corrija os erros antes de enviar.");
   }
 });
