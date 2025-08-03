@@ -2,6 +2,7 @@ const form = document.getElementById("form");
 const submitButton = form.querySelector("button[type='submit']");
 const inputs = form.querySelectorAll("input[type='text'], input[type='email'], input[type='password'], input[type='date']");
 const genderRadios = document.querySelectorAll("input[name='gender']");
+let userTriedSubmit = false; //  novo controle de validação
 
 function showError(input, message) {
   const inputBox = input.closest('.input-box, .radio-container');
@@ -65,7 +66,7 @@ function validateForm() {
   const nameInput = document.getElementById("name");
   let error = isValidName(nameInput.value);
   if (error) {
-    showError(nameInput, error);
+    if (userTriedSubmit) showError(nameInput, error);
     if (!firstInvalidInput) firstInvalidInput = nameInput;
     formIsValid = false;
   } else {
@@ -75,7 +76,7 @@ function validateForm() {
   const lastNameInput = document.getElementById("last_name");
   error = isValidName(lastNameInput.value);
   if (error) {
-    showError(lastNameInput, error);
+    if (userTriedSubmit) showError(lastNameInput, error);
     if (!firstInvalidInput) firstInvalidInput = lastNameInput;
     formIsValid = false;
   } else {
@@ -85,7 +86,7 @@ function validateForm() {
   const birthdateInput = document.getElementById("birthdate");
   error = isValidBirthdate(birthdateInput.value);
   if (error) {
-    showError(birthdateInput, error);
+    if (userTriedSubmit) showError(birthdateInput, error);
     if (!firstInvalidInput) firstInvalidInput = birthdateInput;
     formIsValid = false;
   } else {
@@ -95,7 +96,7 @@ function validateForm() {
   const emailInput = document.getElementById("email");
   error = isValidEmail(emailInput.value);
   if (error) {
-    showError(emailInput, error);
+    if (userTriedSubmit) showError(emailInput, error);
     if (!firstInvalidInput) firstInvalidInput = emailInput;
     formIsValid = false;
   } else {
@@ -105,7 +106,7 @@ function validateForm() {
   const passwordInput = document.getElementById("password");
   error = isValidPassword(passwordInput.value);
   if (error) {
-    showError(passwordInput, error);
+    if (userTriedSubmit) showError(passwordInput, error);
     if (!firstInvalidInput) firstInvalidInput = passwordInput;
     formIsValid = false;
   } else {
@@ -115,7 +116,7 @@ function validateForm() {
   const confirmPasswordInput = document.getElementById("confirm_password");
   error = passwordsMatch(passwordInput.value, confirmPasswordInput.value);
   if (error) {
-    showError(confirmPasswordInput, error);
+    if (userTriedSubmit) showError(confirmPasswordInput, error);
     if (!firstInvalidInput) firstInvalidInput = confirmPasswordInput;
     formIsValid = false;
   } else {
@@ -125,9 +126,11 @@ function validateForm() {
   const genderContainer = document.querySelector(".radio-container");
   const genderError = genderContainer.querySelector('.error-message');
   if (!isGenderSelected()) {
-    genderError.textContent = "Selecione um gênero";
-    genderContainer.classList.add('invalid');
-    genderContainer.classList.remove('valid');
+    if (userTriedSubmit) {
+      genderError.textContent = "Selecione um gênero";
+      genderContainer.classList.add('invalid');
+      genderContainer.classList.remove('valid');
+    }
     formIsValid = false;
   } else {
     genderError.textContent = "";
@@ -135,16 +138,20 @@ function validateForm() {
     genderContainer.classList.add('valid');
   }
 
-  if (firstInvalidInput) firstInvalidInput.focus();
+  if (firstInvalidInput && userTriedSubmit) firstInvalidInput.focus();
   submitButton.disabled = !formIsValid;
   return formIsValid;
 }
 
 inputs.forEach(input => {
-  input.addEventListener('input', validateForm);
+  input.addEventListener('input', () => {
+    if (userTriedSubmit) validateForm();
+  });
 });
 genderRadios.forEach(radio => {
-  radio.addEventListener('change', validateForm);
+  radio.addEventListener('change', () => {
+    if (userTriedSubmit) validateForm();
+  });
 });
 
 const passwordIcons = document.querySelectorAll(".password-icon");
@@ -165,10 +172,13 @@ passwordIcons.forEach(icon => {
 
 form.addEventListener("submit", e => {
   e.preventDefault();
-  if (validateForm()) {
+  userTriedSubmit = true;
+  const isValid = validateForm();
+  if (isValid) {
     alert("Conta criada com sucesso!");
     form.reset();
     submitButton.disabled = true;
+    userTriedSubmit = false;
     document.querySelectorAll('.valid').forEach(el => el.classList.remove('valid'));
   } else {
     alert("Por favor, corrija os erros antes de enviar.");
