@@ -3,7 +3,6 @@ const inputs = form.querySelectorAll("input[type='text'], input[type='email'], i
 const genderRadios = document.querySelectorAll("input[name='gender']");
 const submitButton = form.querySelector("button[type='submit']");
 
-// Funções de validação individuais
 function isNotEmpty(value) {
     return value.trim().length > 0;
 }
@@ -24,10 +23,7 @@ function isGenderSelected() {
     return [...genderRadios].some(radio => radio.checked);
 }
 
-// Validação principal
 function validateForm() {
-    let isValid = true;
-
     const name = document.getElementById("name").value;
     const lastName = document.getElementById("last_name").value;
     const birthdate = document.getElementById("birthdate").value;
@@ -35,35 +31,35 @@ function validateForm() {
     const password = document.getElementById("password").value;
     const confirmPassword = document.getElementById("confirm_password").value;
 
-    if (!isValidName(name)) isValid = false;
-    if (!isValidName(lastName)) isValid = false;
-    if (!isNotEmpty(birthdate)) isValid = false;
-    if (!isValidEmail(email)) isValid = false;
-    if (!isStrongPassword(password)) isValid = false;
-    if (password !== confirmPassword || !isNotEmpty(confirmPassword)) isValid = false;
-    if (!isGenderSelected()) isValid = false;
+    let valid = true;
 
-    submitButton.disabled = !isValid;
+    if (!isValidName(name)) valid = false;
+    if (!isValidName(lastName)) valid = false;
+    if (!isNotEmpty(birthdate)) valid = false;
+    if (!isValidEmail(email)) valid = false;
+    if (!isStrongPassword(password)) valid = false;
+    if (password !== confirmPassword || !isNotEmpty(confirmPassword)) valid = false;
+    if (!isGenderSelected()) valid = false;
+
+    submitButton.disabled = !valid;
 }
 
-// Evento de escuta em tempo real
 inputs.forEach(input => {
     input.addEventListener("input", validateForm);
 });
+
 genderRadios.forEach(radio => {
     radio.addEventListener("change", validateForm);
 });
 
-// Previne envio com campos inválidos
-form.addEventListener("submit", function(event) {
-    validateForm(); // Revalida antes de enviar
+form.addEventListener("submit", event => {
+    validateForm();
     if (submitButton.disabled) {
-        event.preventDefault(); // Impede envio se inválido
+        event.preventDefault();
         alert("Por favor, preencha todos os campos corretamente.");
     }
 });
 
-// Mostrar/ocultar senha
 const passwordIcons = document.querySelectorAll(".password-icon");
 
 passwordIcons.forEach(icon => {
