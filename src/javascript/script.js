@@ -3,7 +3,6 @@ const submitButton = form.querySelector("button[type='submit']");
 const inputs = form.querySelectorAll("input[type='text'], input[type='email'], input[type='password'], input[type='date']");
 const genderRadios = document.querySelectorAll("input[name='gender']");
 
-// Função para mostrar erro
 function showError(input, message) {
   const inputBox = input.closest('.input-box, .radio-container');
   const errorElement = inputBox.querySelector('.error-message');
@@ -12,7 +11,6 @@ function showError(input, message) {
   inputBox.classList.remove('valid');
 }
 
-// Função para limpar erro
 function clearError(input) {
   const inputBox = input.closest('.input-box, .radio-container');
   const errorElement = inputBox.querySelector('.error-message');
@@ -21,7 +19,6 @@ function clearError(input) {
   inputBox.classList.add('valid');
 }
 
-// Validações individuais
 function isValidName(name) {
   if (!name.trim()) return "Campo obrigatório";
   if (name.trim().length < 2) return "Mínimo 2 caracteres";
@@ -61,71 +58,70 @@ function isGenderSelected() {
   return [...genderRadios].some(radio => radio.checked);
 }
 
-// Função geral de validação
 function validateForm() {
   let formIsValid = true;
+  let firstInvalidInput = null;
 
-  // Nome
   const nameInput = document.getElementById("name");
   let error = isValidName(nameInput.value);
   if (error) {
     showError(nameInput, error);
+    if (!firstInvalidInput) firstInvalidInput = nameInput;
     formIsValid = false;
   } else {
     clearError(nameInput);
   }
 
-  // Sobrenome
   const lastNameInput = document.getElementById("last_name");
   error = isValidName(lastNameInput.value);
   if (error) {
     showError(lastNameInput, error);
+    if (!firstInvalidInput) firstInvalidInput = lastNameInput;
     formIsValid = false;
   } else {
     clearError(lastNameInput);
   }
 
-  // Nascimento
   const birthdateInput = document.getElementById("birthdate");
   error = isValidBirthdate(birthdateInput.value);
   if (error) {
     showError(birthdateInput, error);
+    if (!firstInvalidInput) firstInvalidInput = birthdateInput;
     formIsValid = false;
   } else {
     clearError(birthdateInput);
   }
 
-  // Email
   const emailInput = document.getElementById("email");
   error = isValidEmail(emailInput.value);
   if (error) {
     showError(emailInput, error);
+    if (!firstInvalidInput) firstInvalidInput = emailInput;
     formIsValid = false;
   } else {
     clearError(emailInput);
   }
 
-  // Senha
   const passwordInput = document.getElementById("password");
   error = isValidPassword(passwordInput.value);
   if (error) {
     showError(passwordInput, error);
+    if (!firstInvalidInput) firstInvalidInput = passwordInput;
     formIsValid = false;
   } else {
     clearError(passwordInput);
   }
 
-  // Confirmar senha
   const confirmPasswordInput = document.getElementById("confirm_password");
   error = passwordsMatch(passwordInput.value, confirmPasswordInput.value);
   if (error) {
     showError(confirmPasswordInput, error);
+    if (!firstInvalidInput) firstInvalidInput = confirmPasswordInput;
     formIsValid = false;
   } else {
     clearError(confirmPasswordInput);
   }
 
-  // Gênero
   const genderContainer = document.querySelector(".radio-container");
   const genderError = genderContainer.querySelector('.error-message');
   if (!isGenderSelected()) {
@@ -139,13 +135,11 @@ function validateForm() {
     genderContainer.classList.add('valid');
   }
 
-  // Ativa ou desativa botão submit
+  if (firstInvalidInput) firstInvalidInput.focus();
   submitButton.disabled = !formIsValid;
-
   return formIsValid;
 }
 
-// Eventos para validar em tempo real
 inputs.forEach(input => {
   input.addEventListener('input', validateForm);
 });
@@ -153,7 +147,6 @@ genderRadios.forEach(radio => {
   radio.addEventListener('change', validateForm);
 });
 
-// Interação do botão mostrar/ocultar senha
 const passwordIcons = document.querySelectorAll(".password-icon");
 passwordIcons.forEach(icon => {
   icon.addEventListener("click", () => {
@@ -170,7 +163,6 @@ passwordIcons.forEach(icon => {
   });
 });
 
-// Prevenir envio se inválido ou confirmar sucesso
 form.addEventListener("submit", e => {
   e.preventDefault();
   if (validateForm()) {
@@ -183,5 +175,4 @@ form.addEventListener("submit", e => {
   }
 });
 
-// Executar validação ao carregar a página para controlar botão
 window.addEventListener("load", validateForm);
