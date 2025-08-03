@@ -2,7 +2,7 @@ const form = document.getElementById("form");
 const submitButton = form.querySelector("button[type='submit']");
 const inputs = form.querySelectorAll("input[type='text'], input[type='email'], input[type='password'], input[type='date']");
 const genderRadios = document.querySelectorAll("input[name='gender']");
-let userTriedSubmit = false; //  novo controle de validação
+let userTriedSubmit = false; // controle para ativar validação somente após tentativa de envio
 
 function showError(input, message) {
   const inputBox = input.closest('.input-box, .radio-container');
@@ -20,6 +20,7 @@ function clearError(input) {
   inputBox.classList.add('valid');
 }
 
+// Validações específicas
 function isValidName(name) {
   if (!name.trim()) return "Campo obrigatório";
   if (name.trim().length < 2) return "Mínimo 2 caracteres";
@@ -59,10 +60,12 @@ function isGenderSelected() {
   return [...genderRadios].some(radio => radio.checked);
 }
 
+// Validação geral
 function validateForm() {
   let formIsValid = true;
   let firstInvalidInput = null;
 
+  // Nome
   const nameInput = document.getElementById("name");
   let error = isValidName(nameInput.value);
   if (error) {
@@ -73,6 +76,7 @@ function validateForm() {
     clearError(nameInput);
   }
 
+  // Sobrenome
   const lastNameInput = document.getElementById("last_name");
   error = isValidName(lastNameInput.value);
   if (error) {
@@ -83,6 +87,7 @@ function validateForm() {
     clearError(lastNameInput);
   }
 
+  // Data de nascimento
   const birthdateInput = document.getElementById("birthdate");
   error = isValidBirthdate(birthdateInput.value);
   if (error) {
@@ -93,6 +98,7 @@ function validateForm() {
     clearError(birthdateInput);
   }
 
+  // E-mail
   const emailInput = document.getElementById("email");
   error = isValidEmail(emailInput.value);
   if (error) {
@@ -103,6 +109,7 @@ function validateForm() {
     clearError(emailInput);
   }
 
+  // Senha
   const passwordInput = document.getElementById("password");
   error = isValidPassword(passwordInput.value);
   if (error) {
@@ -113,6 +120,7 @@ function validateForm() {
     clearError(passwordInput);
   }
 
+  // Confirmar senha
   const confirmPasswordInput = document.getElementById("confirm_password");
   error = passwordsMatch(passwordInput.value, confirmPasswordInput.value);
   if (error) {
@@ -123,6 +131,7 @@ function validateForm() {
     clearError(confirmPasswordInput);
   }
 
+  // Gênero
   const genderContainer = document.querySelector(".radio-container");
   const genderError = genderContainer.querySelector('.error-message');
   if (!isGenderSelected()) {
@@ -143,6 +152,7 @@ function validateForm() {
   return formIsValid;
 }
 
+// Eventos de input para revalidar dinamicamente
 inputs.forEach(input => {
   input.addEventListener('input', () => {
     if (userTriedSubmit) validateForm();
@@ -154,6 +164,7 @@ genderRadios.forEach(radio => {
   });
 });
 
+// Mostrar/ocultar senha
 const passwordIcons = document.querySelectorAll(".password-icon");
 passwordIcons.forEach(icon => {
   icon.addEventListener("click", () => {
@@ -170,6 +181,7 @@ passwordIcons.forEach(icon => {
   });
 });
 
+// Evento de envio
 form.addEventListener("submit", e => {
   e.preventDefault();
   userTriedSubmit = true;
@@ -185,4 +197,5 @@ form.addEventListener("submit", e => {
   }
 });
 
+// Validação inicial ao carregar
 window.addEventListener("load", validateForm);
