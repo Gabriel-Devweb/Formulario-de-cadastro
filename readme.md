@@ -1,34 +1,43 @@
 # 📝 Formulário de Cadastro
 
-Esse é um projeto simples de formulário de cadastro feito por mim para treinar **HTML** e **CSS**. A ideia principal era testar **posicionamento**, **cores**, **tipografia** e **responsividade** no CSS. 🎨📱
+Projeto criado para treinar e aplicar conhecimentos em **HTML**, **CSS** e um pouco de **JavaScript**.  
+A proposta é construir uma interface de cadastro com layout bonito, responsivo e funcional nos detalhes.
 
-Além do visual, adicionei um **JavaScript** bem básico só pra validar os campos do formulário — se estiverem vazios, aparece um alerta avisando para preencher. ⚠️ Se estiver tudo certo, aparece uma mensagem de sucesso. ✅
+## 🚀 Tecnologias usadas
 
-## 🛠 Tecnologias usadas
+- 🔤 HTML5
+- 🎨 CSS3 (com foco em responsividade)
+- 🧩 JavaScript (interatividade simples com ícone de senha)
+- 💻 VS Code
 
-- 🌐 HTML5  
-- 🎨 CSS3  
-- ⚙️ JavaScript (básico)  
-- 🖥️ Editor: VS Code (navegador)  
-- 🚀 Executado no navegador via servidor local  
+## 📐 Estrutura do projeto
 
-## ✅ Funcionalidades
+/ ├── index.html └── src/ ├── style/ │   └── style.css └── javascript/ └── script.js
 
-- Interface de cadastro com:  
-  - 🧑 Campo de nome  
-  - 📧 Campo de e-mail  
-  - 🔒 Campo de senha  
+## 🎯 Funcionalidades
 
-- ✔️ Validação simples com `alert()` se algum campo estiver vazio  
-- 🎉 Mensagem de sucesso com `alert()` se o formulário for preenchido corretamente  
+- Interface com os seguintes campos:
+  - 👤 Primeiro nome e último nome
+  - 📅 Data de nascimento
+  - 📧 E-mail
+  - 🔒 Senha e confirmação de senha
+  - 🚻 Gênero (Feminino, Masculino, Outro)
 
-## 🎯 Objetivo do projeto
+- 💡 Ícones nos campos para melhor experiência visual
+- 👁️ Botão para mostrar/ocultar senha
+- 📱 Layout responsivo (funciona bem em dispositivos móveis)
 
-Esse projeto foi feito para **testar e praticar CSS e HTML**.  
-O JavaScript é bem básico, só pra dar um toque de interatividade. ✨  
-O foco principal aqui foi deixar o layout **bonito e funcional**. 🎯💻
+## 🧠 O que foi praticado
 
-## 👨‍💻 Autor
+- Posicionamento com **Flexbox** e **Grid**
+- Boas práticas de design: cores, tipografia, sombras e bordas
+- Interatividade com **JS básico** (toggle de tipo da senha com ícones)
+- Organização de arquivos em pastas modulares
 
-Gabriel Barreto ([@Gabriel-Devweb](https://github.com/Gabriel-Devweb)) 🚀
+## 🌐 Hospedagem
+
+> Projeto pronto para ser hospedado na [Vercel](https://vercel.com) ou em qualquer serviço de deploy estático.
+
 ---
+
+Feito com 💻 por Gabriel • [@Gabriel-Devweb](https://github.com/Gabriel-Devweb)
