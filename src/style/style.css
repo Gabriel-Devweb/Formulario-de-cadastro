@@ -172,3 +172,10 @@ gap: 38px;
   border-radius: 8px;
   padding: 8px;
 }
+.error-message {
+  min-height: 18px; /* Garante espaço para 1 linha de texto */
+  font-size: 0.875rem;
+  color: red;
+  margin-top: 4px;
+  transition: all 0.2s ease;
+}
