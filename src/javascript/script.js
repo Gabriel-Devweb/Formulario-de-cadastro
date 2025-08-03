@@ -1,131 +1,86 @@
-const form = document.getElementById("form");
-const inputs = document.querySelectorAll(".required");
-const spans = document.querySelectorAll(".span-required");
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const form = document.querySelector('#form');
 
-const nameInput = document.getElementById("name");
-const lastnameInput = document.getElementById("lastname");
-const dateInput = document.getElementById("date");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const confirmPasswordInput = document.getElementById("confirm-password");
-const genderInputs = document.querySelectorAll('input[name="gender"]');
+form.addEventListener('submit', function (e) {
+    e.preventDefault();
 
-function showError(index) {
-  inputs[index].style.border = "2px solid #e63636";
-  spans[index].style.display = "block";
-}
+    let allValid = true;
 
-function hideError(index) {
-  inputs[index].style.border = "";
-  spans[index].style.display = "none";
-}
+    const fields = [
+        {
+            id: 'name',
+            label: 'Nome',
+            validator: nameIsValid
+        },
+        {
+            id: 'last_name',
+            label: 'Sobrenome',
+            validator: nameIsValid
+        },
+        {
+            id: 'birthdate',
+            label: 'Nascimento',
+            validator: dateIsValid
+        },
+        {
+            id: 'email',
+            label: 'E-mail',
+            validator: emailIsValid
+        },
+        {
+            id: 'password',
+            label: 'Senha',
+            validator: passwordIsSecure
+        },
+        {
+            id: 'confirm_password',
+            label: 'Confirmar senha',
+            validator: passwordMatch
+        }
+    ];
 
-function validateName() {
-  if (nameInput.value.trim() === "") {
-    showError(0);
-    return false;
-  } else {
-    hideError(0);
-    return true;
-  }
-}
+    const errorIcon = '<i class="fa-solid fa-circle-exclamation"></i>';
 
-function validateLastName() {
-  if (lastnameInput.value.trim() === "") {
-    showError(1);
-    return false;
-  } else {
-    hideError(1);
-    return true;
-  }
-}
+    fields.forEach(function (field) {
+        const input = document.getElementById(field.id);
+        const inputBox = input.closest('.input-box');
+        const inputValue = input.value;
 
-function validateDate() {
-  if (dateInput.value === "") {
-    showError(2);
-    return false;
-  } else {
-    hideError(2);
-    return true;
-  }
-}
+        const errorSpan = inputBox.querySelector('.error');
+        errorSpan.innerHTML = '';
 
-function validateEmail() {
-  if (!emailRegex.test(emailInput.value)) {
-    showError(3);
-    return false;
-  } else {
-    hideError(3);
-    return true;
-  }
-}
+        inputBox.classList.remove('invalid');
+        inputBox.classList.add('valid');
 
-function showPasswordInstructions() {
-  spans[4].style.display = "block";
-}
+        const fieldValidator = field.validator(inputValue);
 
-function validatePassword() {
-  const value = passwordInput.value;
-  const isValid = value.length >= 8 && /[A-Z]/.test(value) && /\d/.test(value);
-  if (!isValid) {
-    showError(4);
-    return false;
-  } else {
-    hideError(4);
-    return true;
-  }
-}
+        if (!fieldValidator.isValid) {
+            errorSpan.innerHTML = `${errorIcon} ${fieldValidator.errorMessage}`;
+            inputBox.classList.add('invalid');
+            inputBox.classList.remove('valid');
+            allValid = false;
+        }
+    });
 
-function validateConfirmPassword() {
-  if (passwordInput.value !== confirmPasswordInput.value || confirmPasswordInput.value === "") {
-    showError(5);
-    return false;
-  } else {
-    hideError(5);
-    return true;
-  }
-}
+    const genders = document.getElementsByName('gender');
+    const radioContainer = document.querySelector('.radio-container');
+    const genderErrorSpan = radioContainer.querySelector('.error');
 
-function validateGender() {
-  const selected = Array.from(genderInputs).some(input => input.checked);
-  if (!selected) {
-    document.querySelector(".gender .span-required").style.display = "block";
-    return false;
-  } else {
-    document.querySelector(".gender .span-required").style.display = "none";
-    return true;
-  }
-}
+    const selectedGender = [...genders].find(input => input.checked);
+    radioContainer.classList.remove('valid');
+    radioContainer.classList.add('invalid');
+    genderErrorSpan.innerHTML = `${errorIcon} Selecione um gênero!`;
 
-// Exibe instrução da senha ao começar a digitar
-passwordInput.addEventListener("input", showPasswordInstructions);
+    if (selectedGender) {
+        radioContainer.classList.add('valid');
+        radioContainer.classList.remove('invalid');
+        genderErrorSpan.innerHTML = '';
+    } else {
+        allValid = false;
+    }
 
-form.addEventListener("submit", function (e) {
-  e.preventDefault();
-
-  const isValidName = validateName();
-  const isValidLastName = validateLastName();
-  const isValidDate = validateDate();
-  const isValidEmail = validateEmail();
-  const isValidPassword = validatePassword();
-  const isValidConfirm = validateConfirmPassword();
-  const isValidGender = validateGender();
-
-  if (
-    isValidName &&
-    isValidLastName &&
-    isValidDate &&
-    isValidEmail &&
-    isValidPassword &&
-    isValidConfirm &&
-    isValidGender
-  ) {
-    alert("✅ Conta criada com sucesso!");
-    form.reset();
-    spans.forEach(span => span.style.display = "none");
-    inputs.forEach(input => input.style.border = "");
-  } else {
-    alert("❌ Preencha todos os campos corretamente antes de enviar.");
-  }
+    if (allValid) {
+        alert('Conta criada com sucesso!');
+    } else {
+        alert('Não foi possível criar a conta. Verifique os campos obrigatórios!');
+    }
 });
