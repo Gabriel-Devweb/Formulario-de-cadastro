@@ -36,7 +36,7 @@ A proposta é construir uma interface de cadastro com layout bonito, responsivo 
 
 ## 🌐 Hospedagem
 
-> Projeto pronto para ser hospedado na [Vercel](https://vercel.com) ou em qualquer serviço de deploy estático.
+> Projeto hospedado no [Vercel](https://cadastroweb.vercel.app/).
 
 ---
 
